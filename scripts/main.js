@@ -2,14 +2,13 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.tilemap('level1', 'assets/games/starstruck/level1.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.image('tiles-1', 'assets/games/starstruck/tiles-1.png');
-    game.load.spritesheet('dude', 'assets/games/starstruck/dude.png', 32, 48);
-    game.load.spritesheet('droid', 'assets/games/starstruck/droid.png', 32, 32);
-    game.load.image('starSmall', 'assets/games/starstruck/star.png');
-    game.load.image('starBig', 'assets/games/starstruck/star2.png');
-    game.load.image('background', 'assets/games/starstruck/background2.png');
-
+    game.load.tilemap('level1', 'assets/games/minedigger/level1.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('tiles-1', 'assets/games/minedigger/tiles-1.png');
+    game.load.spritesheet('dude', 'assets/games/minedigger/dude.png', 32, 48);
+    game.load.spritesheet('droid', 'assets/games/minedigger/droid.png', 32, 32);
+    game.load.image('starSmall', 'assets/games/minedigger/star.png');
+    game.load.image('starBig', 'assets/games/minedigger/star2.png');
+    game.load.image('background', 'assets/games/minedigger/background2.png');
 }
 
 var map;
