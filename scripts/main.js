@@ -2,23 +2,26 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.tilemap('level1', 'assets/games/minedigger/level1.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.image('tiles-1', 'assets/games/minedigger/tiles-1.png');
-    game.load.spritesheet('dude', 'assets/games/minedigger/dude.png', 32, 48);
-    game.load.spritesheet('droid', 'assets/games/minedigger/droid.png', 32, 32);
-    game.load.image('starSmall', 'assets/games/minedigger/star.png');
-    game.load.image('starBig', 'assets/games/minedigger/star2.png');
-    game.load.image('background', 'assets/games/minedigger/background2.png');
+    game.load.tilemap('level1', 'assets/games/starstruck/level1.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('tiles-1', 'assets/games/starstruck/tiles-1.png');
+    game.load.spritesheet('dude', 'assets/games/starstruck/dude.png', 32, 48);
+    game.load.spritesheet('droid', 'assets/games/starstruck/droid.png', 32, 32);
+    game.load.image('starSmall', 'assets/games/starstruck/star.png');
+    game.load.image('starBig', 'assets/games/starstruck/star2.png');
+    game.load.image('background', 'assets/games/starstruck/background2.png');
+
 }
 
 var map;
 var tileset;
+var tileSize;
 var layer;
 var player;
 var facing = 'right';
 var jumpTimer = 0;
 var cursors;
 var jumpButton;
+var digButton;
 var bg;
 
 function create() {
@@ -32,6 +35,8 @@ function create() {
 
     map = game.add.tilemap('level1');
 
+    tileSize = 16;
+
     map.addTilesetImage('tiles-1');
 
     map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
@@ -39,7 +44,7 @@ function create() {
     layer = map.createLayer('Tile Layer 1');
 
     //  Un-comment this on to see the collision tiles
-    // layer.debug = true;
+    layer.debug = true;
 
     layer.resizeWorld();
 
@@ -60,6 +65,7 @@ function create() {
 
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    digButton = game.input.keyboard.addKey(Phaser.Keyboard.D);
 
 }
 
@@ -114,6 +120,18 @@ function update() {
         jumpTimer = game.time.now + 750;
     }
 
+    var xTile = Math.round(player.x / tileSize);
+    var yTile = Math.round(player.y / tileSize);
+
+    console.log(xTile + " " + yTile);
+    var tile;
+    tile = map.getTile(xTile, yTile+2, layer, true);
+    console.log(tile);
+
+    if (digButton.isDown && tile.index != -1) {
+        map.putTile(-1, xTile, yTile+3);
+        layer.dirty = true;
+    }
 }
 
 function render () {
