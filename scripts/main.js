@@ -1,15 +1,21 @@
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 577, Phaser.CANVAS, 'phaser-example', {
+    preload: preload,
+    create: create,
+    update: update,
+    render: render
+});
 
 function preload() {
 
-    game.load.tilemap('level1', 'assets/games/starstruck/level1.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.image('tiles-1', 'assets/games/starstruck/tiles-1.png');
+    game.load.tilemap('map', 'assets/tilemaps/maps/map_data.json', null, Phaser.Tilemap.TILED_JSON);
+
+    game.load.spritesheet('ground', 'assets/tilemaps/tiles/ground.png', 32, 32);
+    game.load.spritesheet('tiles', 'assets/tilemaps/tiles/tiles.png', 32, 32);
+
     game.load.spritesheet('dude', 'assets/games/starstruck/dude.png', 32, 48);
     game.load.spritesheet('droid', 'assets/games/starstruck/droid.png', 32, 32);
     game.load.image('starSmall', 'assets/games/starstruck/star.png');
     game.load.image('starBig', 'assets/games/starstruck/star2.png');
-    game.load.image('background', 'assets/games/starstruck/background2.png');
-
 }
 
 var map;
@@ -22,7 +28,6 @@ var jumpTimer = 0;
 var cursors;
 var jumpButton;
 var digButton;
-var bg;
 
 function create() {
 
@@ -30,21 +35,21 @@ function create() {
 
     game.stage.backgroundColor = '#000000';
 
-    bg = game.add.tileSprite(0, 0, 800, 600, 'background');
-    bg.fixedToCamera = true;
+    tileSize = 32;
 
-    map = game.add.tilemap('level1');
+    map = game.add.tilemap('map');
 
-    tileSize = 16;
+    map.addTilesetImage('ground', 'ground');
+    map.addTilesetImage('tiles', 'tiles');
 
-    map.addTilesetImage('tiles-1');
+    map.setCollisionBetween(2, 3);
 
-    map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
+    map.setTileIndexCallback(3, hitCoin, this);
 
     layer = map.createLayer('Tile Layer 1');
 
     //  Un-comment this on to see the collision tiles
-    layer.debug = true;
+    layer.debug = false;
 
     layer.resizeWorld();
 
@@ -66,7 +71,6 @@ function create() {
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     digButton = game.input.keyboard.addKey(Phaser.Keyboard.D);
-
 }
 
 function update() {
@@ -75,38 +79,30 @@ function update() {
 
     player.body.velocity.x = 0;
 
-    if (cursors.left.isDown)
-    {
+    if (cursors.left.isDown) {
         player.body.velocity.x = -150;
 
-        if (facing != 'left')
-        {
+        if (facing != 'left') {
             player.animations.play('left');
             facing = 'left';
         }
     }
-    else if (cursors.right.isDown)
-    {
+    else if (cursors.right.isDown) {
         player.body.velocity.x = 150;
 
-        if (facing != 'right')
-        {
+        if (facing != 'right') {
             player.animations.play('right');
             facing = 'right';
         }
     }
-    else
-    {
-        if (facing != 'idle')
-        {
+    else {
+        if (facing != 'idle') {
             player.animations.stop();
 
-            if (facing == 'left')
-            {
+            if (facing == 'left') {
                 player.frame = 0;
             }
-            else
-            {
+            else {
                 player.frame = 5;
             }
 
@@ -114,27 +110,39 @@ function update() {
         }
     }
 
-    if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer)
-    {
+    if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer) {
         player.body.velocity.y = -250;
         jumpTimer = game.time.now + 750;
     }
 
-    var xTile = Math.round(player.x / tileSize);
-    var yTile = Math.round(player.y / tileSize);
+    if (digButton.isDown) {
+        var xTile = Math.floor(player.x / tileSize);
+        var yTile = Math.floor(player.y / tileSize);
 
-    console.log(xTile + " " + yTile);
-    var tile;
-    tile = map.getTile(xTile, yTile+2, layer, true);
-    console.log(tile);
+        console.log("x, y " + xTile + " " + yTile);
+        var tile = map.getTile(xTile, yTile + 2, layer, true);
+        console.log(tile);
 
-    if (digButton.isDown && tile.index != -1) {
-        map.putTile(-1, xTile, yTile+3);
-        layer.dirty = true;
+        if (tile.index != -1) {
+            map.putTile(-1, xTile, yTile + 2);
+            layer.dirty = true;
+        }
     }
 }
 
-function render () {
+function hitCoin (sprite, tile) {
+    var xTile = tile.x;
+    var yTile = tile.y;
+
+    console.log("hit Coin " + xTile + " " + yTile);
+
+    map.putTile(1, xTile, yTile);
+    layer.dirty = true;
+
+    return false;
+}
+
+function render() {
 
     // game.debug.text(game.time.physicsElapsed, 32, 32);
     // game.debug.body(player);
