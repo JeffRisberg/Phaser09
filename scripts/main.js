@@ -15,7 +15,7 @@ require([
     'phaser',
     'playState'
 ], function (phaser, play) {
-    var phaserGame = new Phaser.Game(920, 577, Phaser.CANVAS, 'Phaser03');
+    var phaserGame = new Phaser.Game(920, 577, Phaser.CANVAS, 'Mine-Digger');
 
     phaserGame.state.add('play', play);
 
