@@ -46,7 +46,7 @@ define(['extensions/Container'], function (Container) {
 
             map.setCollisionBetween(2, 3);
 
-            map.setTileIndexCallback(3, hitCoin, this);
+            map.setTileIndexCallback(3, this.hitCoin, this);
 
             layer = map.createLayer('Tile Layer 1');
 
