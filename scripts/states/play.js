@@ -53,11 +53,12 @@ define(['extensions/Container'], function (Container) {
             //  Un-comment this on to see the collision tiles
             layer.debug = false;
 
-            layer.resizeWorld();
+            //layer.resizeWorld();
 
             game.physics.arcade.gravity.y = 250;
 
             player = game.add.sprite(32, 32, 'dude');
+            sprite.anchor.set(0.5);
             game.physics.enable(player, Phaser.Physics.ARCADE);
 
             player.body.bounce.y = 0.2;

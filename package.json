@@ -1,5 +1,5 @@
 {
-  "name": "phaser09",
+  "name": "Phaser09",
   "private": true,
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -14,8 +14,8 @@
     "grunt-html-build": "~0.3.2",
     "underscore": "*",
     "underscore.string": "*",
-    "browserify": "~3.38.0",
-    "grunt-browserify": "~1.3.0"
+    "browserify": "^11.0.0",
+    "grunt-browserify": "~5.0.0"
   },
   "engines": {
     "node": ">=0.10.0"
